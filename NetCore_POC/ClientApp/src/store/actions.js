@@ -21,27 +21,28 @@ export const fetchPostsSuccess = data => {
   };
 };
 
-export const fetchPosts = () => async dispatch => {
+export const fetchPosts = page => async dispatch => {
+  const pageQuery = page !== undefined ? `?page=${page}` : "";
   dispatch(fetchPostsStart());
   try {
-    const response = await localhost.get("/api/posts");
+    const response = await localhost.get(`/api/posts${pageQuery}`);
     dispatch(fetchPostsSuccess(response));
   } catch (e) {
     dispatch(fetchPostsFail(e));
   }
 };
 
-export const editPost = formValues => async dispatch => {
+export const editPost = (formValues, pageNum) => async dispatch => {
   const response = await localhost.patch("/api/posts", formValues);
   dispatch({ type: actionTypes.EDIT_POST, quoteEdited: response.data });
-  dispatch(fetchPosts());
+  dispatch(fetchPosts(pageNum));
 };
 
-export const addPost = formValues => {
+export const addPost = (formValues, pageNum) => {
   return async dispatch => {
     const response = await localhost.post("/api/posts", { ...formValues });
     dispatch({ type: actionTypes.CREATE_POST, postNew: response });
-    dispatch(fetchPosts());
+    dispatch(fetchPosts(pageNum));
   };
 };
 

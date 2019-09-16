@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { addPost } from "../store/actions";
 
 const CreatePost = props => {
+  const { paginationData } = props;
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = event => {
@@ -22,7 +23,10 @@ const CreatePost = props => {
         Body: form.formBody.value,
         Title: form.formTitle.value
       };
-      props.addPost(newPost);
+      const lastNewPage = Math.ceil(
+        (paginationData.entries + 1) / paginationData.pageSize
+      );
+      props.addPost(newPost, lastNewPage);
       props.cancel(false);
     }
     setValidated(true);
@@ -86,11 +90,17 @@ const CreatePost = props => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    paginationData: state.posts.data ? state.posts.data.pagination : null
+  };
+};
+
 const mapDispatchToProps = {
   addPost
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(CreatePost);

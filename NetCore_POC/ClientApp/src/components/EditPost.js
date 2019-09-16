@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { editPost } from "../store/actions";
 
 const EditPost = props => {
-  const { item } = props;
+  const { item, paginationData } = props;
   const [validated, setValidated] = useState(false);
   const handleSubmit = event => {
     const form = event.currentTarget;
@@ -23,7 +23,7 @@ const EditPost = props => {
         author: item.author,
         date: item.date
       };
-      props.editPost(editedPost);
+      props.editPost(editedPost, paginationData.current);
       props.onEdit(false);
     }
     setValidated(true);
@@ -94,10 +94,16 @@ const EditPost = props => {
   );
 };
 
+const mapStateToProps = state => {
+  return {
+    paginationData: state.posts.data ? state.posts.data.pagination : null
+  };
+};
+
 const mapDispatchToProps = {
   editPost
 };
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(EditPost);
