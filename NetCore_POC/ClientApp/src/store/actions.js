@@ -51,3 +51,10 @@ export const deletePost = id => async dispatch => {
   dispatch({ type: actionTypes.DELETE_POST, id: id });
   dispatch(fetchPosts());
 };
+
+export const updateAuth = flag => {
+  return {
+    type: actionTypes.SET_AUTH,
+    loggedIn: flag
+  };
+};

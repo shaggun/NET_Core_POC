@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -6,10 +6,53 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import Collapse from "react-bootstrap/Collapse";
 import CreatePost from "./CreatePost";
+import { updateAuth } from "../store/actions";
 
 const Header = props => {
   const [auth, setAuth] = useState(false);
-  const [openCreate, setOpenCreate] = useState(true);
+  const [authGoogle, setAuthGoogle] = useState();
+  useEffect(() => {
+    window.gapi.load("client:auth2", () => {
+      window.gapi.client
+        .init({
+          clientId:
+            "274652279966-6jsvv7uqnnbk4nkri6rl5tvi8qqkmiim.apps.googleusercontent.com",
+          scope: "profile"
+        })
+        .then(() => {
+          setAuthGoogle(window.gapi.auth2.getAuthInstance());
+        });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (authGoogle !== undefined) {
+      onAuthChange();
+      authGoogle.isSignedIn.listen(onAuthChange);
+      console.log(authGoogle);
+    }
+  }, [authGoogle]);
+
+  const onAuthChange = () => {
+    if (authGoogle !== undefined) {
+      setAuth(authGoogle.isSignedIn.get());
+      props.updateAuth(authGoogle.isSignedIn.get());
+    }
+  };
+
+  const onSignIn = () => {
+    if (authGoogle !== undefined) {
+      authGoogle.signIn();
+    }
+  };
+
+  const onSignOut = () => {
+    if (authGoogle !== undefined) {
+      authGoogle.signOut();
+    }
+  };
+
+  const [openCreate, setOpenCreate] = useState(false);
   return (
     <Container>
       <Navbar
@@ -24,10 +67,14 @@ const Header = props => {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto"></Nav>
           <Nav>
-            {!auth ? (
+            {auth ? (
               <React.Fragment>
                 <img
-                  src="https://i.imgur.com/tfCW058.png"
+                  src={
+                    authGoogle !== undefined
+                      ? authGoogle.currentUser.Ab.w3.Paa
+                      : "https://i.imgur.com/tfCW058.png"
+                  }
                   width="45"
                   height="45"
                   className="d-inline-block align-top clip-circle"
@@ -36,7 +83,11 @@ const Header = props => {
                 />
                 <NavDropdown
                   alignRight
-                  title="User Name"
+                  title={
+                    authGoogle !== undefined
+                      ? authGoogle.currentUser.Ab.w3.ig
+                      : "username"
+                  }
                   id="collasible-nav-dropdown"
                 >
                   <NavDropdown.Item
@@ -46,13 +97,13 @@ const Header = props => {
                   >
                     Create New Post
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">
+                  <NavDropdown.Item onClick={onSignOut}>
                     Sign Out
                   </NavDropdown.Item>
                 </NavDropdown>
               </React.Fragment>
             ) : (
-              <Nav.Link eventKey={2}>Log In</Nav.Link>
+              <Nav.Link onClick={onSignIn}>Log In With Google</Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>
@@ -60,11 +111,26 @@ const Header = props => {
       <Collapse in={openCreate}>
         <div id="create-collapse">
           <br />
-          <CreatePost cancel={setOpenCreate} />
+          {auth ? (
+            <CreatePost
+              author={
+                authGoogle !== undefined
+                  ? authGoogle.currentUser.Ab.w3.ig
+                  : "author"
+              }
+              cancel={setOpenCreate}
+            />
+          ) : null}
         </div>
       </Collapse>
     </Container>
   );
 };
 
-export default connect()(Header);
+const mapDispatchToProps = {
+  updateAuth
+};
+export default connect(
+  null,
+  mapDispatchToProps
+)(Header);

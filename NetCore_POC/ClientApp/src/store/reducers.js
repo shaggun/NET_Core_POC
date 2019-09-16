@@ -39,6 +39,11 @@ export const posts = (state = defaultState, action) => {
       return {
         ...state
       };
+    case actionTypes.SET_AUTH:
+      return {
+        ...state,
+        loggedIn: action.loggedIn
+      };
     default:
       return state;
   }

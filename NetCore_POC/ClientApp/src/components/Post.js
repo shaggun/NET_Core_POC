@@ -9,9 +9,8 @@ import { connect } from "react-redux";
 import { deletePost } from "../store/actions";
 
 const Post = props => {
-  const { item } = props;
-  const [editionOptions, setEditionOptions] = useState(false);
-
+  const { item, isLoggedIn } = props;
+  console.log(isLoggedIn);
   const onCancel = () => {
     props.deletePost(item.id);
   };
@@ -29,7 +28,7 @@ const Post = props => {
             <Card.Header>
               <Row className="justify-content-between mr-1 ml-1 ">
                 <Card.Title>{item.title}</Card.Title>
-                {!editionOptions ? (
+                {isLoggedIn ? (
                   <div>
                     <Button
                       onClick={() => props.onEdit(true)}
@@ -67,11 +66,18 @@ const Post = props => {
   );
 };
 
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    isLoggedIn: state.loggedIn
+  };
+};
+
 const mapDispatchToProps = {
   deletePost
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Post);

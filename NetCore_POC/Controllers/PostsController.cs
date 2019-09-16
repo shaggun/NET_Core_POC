@@ -34,7 +34,7 @@ namespace NetCore_POC.Controllers
         //    return _context.posts.ToList();
         //}
         [HttpGet]
-        public IActionResult GetPosts(int? page = 1, int? pageSize = 2)
+        public IActionResult GetPosts(int? page = 1, int? pageSize = 5)
         {
             if (!page.HasValue)
             {

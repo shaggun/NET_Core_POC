@@ -18,7 +18,7 @@ const CreatePost = props => {
       event.stopPropagation();
     } else {
       const newPost = {
-        Author: "dummy",
+        Author: props.author,
         Date: new Date().toLocaleString(),
         Body: form.formBody.value,
         Title: form.formTitle.value
