@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { connect } from "react-redux";
+import { addPost } from "../store/actions";
 
 const CreatePost = props => {
   const [validated, setValidated] = useState(false);
@@ -15,13 +17,13 @@ const CreatePost = props => {
       event.stopPropagation();
     } else {
       const newPost = {
-        //id: uuid.v1(), // Generates a RFC4122 UUID for the ID
-        author: "dummy",
-        date: "date",
-        body: form.formBody.value,
-        title: form.formTitle.value
+        Author: "dummy",
+        Date: new Date().toLocaleString(),
+        Body: form.formBody.value,
+        Title: form.formTitle.value
       };
-      //methods
+      props.addPost(newPost);
+      props.cancel(false);
     }
     setValidated(true);
     event.preventDefault();
@@ -84,4 +86,11 @@ const CreatePost = props => {
   );
 };
 
-export default CreatePost;
+const mapDispatchToProps = {
+  addPost
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CreatePost);

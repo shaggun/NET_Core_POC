@@ -5,21 +5,25 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import EditIcon from "../assets/pencil.png";
 import DeleteIcon from "../assets/bin.png";
+import { connect } from "react-redux";
+import { deletePost } from "../store/actions";
 
 const Post = props => {
   const { item } = props;
   const [editionOptions, setEditionOptions] = useState(false);
 
   const onCancel = () => {
-    console.log("deleting");
+    props.deletePost(item.id);
   };
   return (
     <React.Fragment>
       <Card bg="light">
         <Row className="justify-content-between">
           <Col xs="2" style={{ borderRight: "1px solid rgba(0,0,0,0.1)" }}>
-            <h6 className="mt-3 ml-4"> {item.author}</h6>
-            <div className="mt-3 ml-4">{item.date}</div>
+            <h6 className="mt-3 ml-4 mb-1"> {item.author}</h6>
+            <div className="ml-4" style={{ fontSize: "0.7rem" }}>
+              {item.date}
+            </div>
           </Col>
           <Col xs="10" className="pl-0">
             <Card.Header>
@@ -63,4 +67,11 @@ const Post = props => {
   );
 };
 
-export default Post;
+const mapDispatchToProps = {
+  deletePost
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Post);
