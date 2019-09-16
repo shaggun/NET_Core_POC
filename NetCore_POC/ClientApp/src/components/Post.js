@@ -9,6 +9,10 @@ import DeleteIcon from "../assets/bin.png";
 const Post = props => {
   const { item } = props;
   const [editionOptions, setEditionOptions] = useState(false);
+
+  const onCancel = () => {
+    console.log("deleting");
+  };
   return (
     <React.Fragment>
       <Card bg="light">
@@ -30,7 +34,18 @@ const Post = props => {
                     >
                       <img src={EditIcon} width="20" alt="edit" />
                     </Button>
-                    <Button variant="outline-secondary" className="ml-1">
+                    <Button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you wish to delete this post?"
+                          )
+                        )
+                          onCancel();
+                      }}
+                      variant="outline-secondary"
+                      className="ml-1"
+                    >
                       <img src={DeleteIcon} width="20" alt="edit" />
                     </Button>
                   </div>
