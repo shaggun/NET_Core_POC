@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -10,7 +10,6 @@ import { deletePost } from "../store/actions";
 
 const Post = props => {
   const { item, isLoggedIn } = props;
-  console.log(isLoggedIn);
   const onCancel = () => {
     props.deletePost(item.id);
   };
@@ -67,7 +66,6 @@ const Post = props => {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     isLoggedIn: state.loggedIn
   };

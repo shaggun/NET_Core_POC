@@ -29,7 +29,6 @@ const Header = props => {
     if (authGoogle !== undefined) {
       onAuthChange();
       authGoogle.isSignedIn.listen(onAuthChange);
-      console.log(authGoogle);
     }
   }, [authGoogle]);
 

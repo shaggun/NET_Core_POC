@@ -40,7 +40,6 @@ const Home = props => {
 };
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     fetchPending: state.fetchPending,
     fetchError: state.fetchError,
